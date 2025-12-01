@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 style="text-align: center; margin-bottom: 3rem;">Наши услуги и цены</h1>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem;">
+    <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <h3 style="color: #e74c3c; margin-bottom: 1rem;">Базовая услуга</h3>
+        <p style="font-size: 2rem; font-weight: bold; color: #2c3e50;">5 000 ₽</p>
+        <ul style="list-style: none; padding: 0; margin: 1rem 0;">
+            <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">✓ Консультация специалиста</li>
+            <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">✓ Выезд на объект</li>
+            <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">✓ Составление сметы</li>
+        </ul>
+    </div>
+
+    <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <h3 style="color: #e74c3c; margin-bottom: 1rem;">Стандартная услуга</h3>
+        <p style="font-size: 2rem; font-weight: bold; color: #2c3e50;">15 000 ₽</p>
+        <ul style="list-style: none; padding: 0; margin: 1rem 0;">
+            <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">✓ Все из базового пакета</li>
+            <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">✓ Полный комплекс работ</li>
+            <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">✓ Гарантия 6 месяцев</li>
+            <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">✓ Материалы входят в стоимость</li>
+        </ul>
+    </div>
+
+    <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <h3 style="color: #e74c3c; margin-bottom: 1rem;">Премиум услуга</h3>
+        <p style="font-size: 2rem; font-weight: bold; color: #2c3e50;">25 000 ₽</p>
+        <ul style="list-style: none; padding: 0; margin: 1rem 0;">
+            <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">✓ Все из стандартного пакета</li>
+            <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">✓ Срочное выполнение</li>
+            <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">✓ Гарантия 12 месяцев</li>
+            <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">✓ Премиальные материалы</li>
+            <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">✓ Послегарантийное обслуживание</li>
+        </ul>
+    </div>
+</div>
+
+<div style="margin-top: 4rem;">
+    <h2 style="text-align: center; margin-bottom: 2rem;">Описание работ</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+        <div style="text-align: center;">
+            <img src="{{ url_for('static', filename='images/service1.jpg') }}" alt="Работа 1" style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 1rem;">
+            <h4>Подготовительные работы</h4>
+            <p>Тщательная подготовка поверхности и материалов перед началом основных работ</p>
+        </div>
+        <div style="text-align: center;">
+            <img src="{{ url_for('static', filename='images/service2.jpg') }}" alt="Работа 2" style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 1rem;">
+            <h4>Основной процесс</h4>
+            <p>Качественное выполнение работ с использованием профессионального оборудования</p>
+        </div>
+        <div style="text-align: center;">
+            <img src="{{ url_for('static', filename='images/service3.jpg') }}" alt="Работа 3" style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 1rem;">
+            <h4>Финальная отделка</h4>
+            <p>Завершающие работы и уборка территории после выполнения всех задач</p>
+        </div>
+    </div>
+</div>
+
+<div style="text-align: center; margin-top: 3rem;">
+    <a href="{{ url_for('form') }}" class="btn" style="font-size: 1.2rem; padding: 15px 30px;">
+        Оставить заявку
+    </a>
+</div>
+{% endblock %}

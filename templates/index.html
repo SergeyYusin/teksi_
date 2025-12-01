@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="text-align: center; padding: 4rem 0;">
+    <h1 style="font-size: 3rem; margin-bottom: 1rem;">Поверка замена счетчика воды</h1>
+    <p style="font-size: 1.2rem; margin-bottom: 2rem; color: #666;">Оформите заявку по телефону или напишите нам.</p>
+    
+    <div style="margin-bottom: 2rem;">
+        <h2 style="color: #2c3e50;">Телефон: +74997494804 или +74997494796</h2>
+    </div>
+    
+    <a href="{{ url_for('form') }}" class="btn" style="font-size: 1.2rem; padding: 15px 30px;">
+        Оформить заявку
+    </a>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 4rem;">
+    <div style="text-align: center;">
+        <img src="{{ url_for('static', filename='images/img.png') }}" alt="Услуга 1" style="width: 100%; max-width: 300px; height: 200px; object-fit: cover; border-radius: 10px;">
+        <h3>Быстро</h3>
+        <p>Оперативное выполнение работ в сжатые сроки</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="{{ url_for('static', filename='images/service2.jpg') }}" alt="Услуга 2" style="width: 100%; max-width: 300px; height: 200px; object-fit: cover; border-radius: 10px;">
+        <h3>Качественно</h3>
+        <p>Высокое качество выполнения всех видов работ</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="{{ url_for('static', filename='images/service3.jpg') }}" alt="Услуга 3" style="width: 100%; max-width: 300px; height: 200px; object-fit: cover; border-radius: 10px;">
+        <h3>Надежно</h3>
+        <p>Гарантия на все виды выполненных работ</p>
+    </div>
+</div>
+{% endblock %}

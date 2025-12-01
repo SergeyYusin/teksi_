@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto;">
+    <h1 style="text-align: center; margin-bottom: 2rem;">Форма заявки</h1>
+
+    <form method="POST" action="{{ url_for('submit_application') }}" style="background: #f9f9f9; padding: 2rem; border-radius: 10px;">
+        <div style="margin-bottom: 1rem;">
+            <label for="full_name" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">ФИО:</label>
+            <input type="text" id="full_name" name="full_name" required
+                   style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+            <label for="address" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Адрес:</label>
+            <input type="text" id="address" name="address" required
+                   style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+            <label for="phone" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Номер телефона:</label>
+            <input type="tel" id="phone" name="phone" required
+                   style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+            <label for="comment" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Комментарий:</label>
+            <textarea id="comment" name="comment" rows="4"
+                      style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;"></textarea>
+        </div>
+
+        <button type="submit" class="btn" style="width: 100%; font-size: 1.1rem;">
+            Отправить заявку
+        </button>
+    </form>
+</div>
+{% endblock %}
