@@ -6,7 +6,6 @@
 .env.development
 .env.production
 .env.test
-.env.example
 *.env
 
 # Файлы с паролями и секретами
