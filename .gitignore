@@ -69,3 +69,7 @@ Thumbs.db
 
 # Логи
 *.log
+
+# Фавиконы (опционально, если генерируются автоматически)
+static/favicon*.png
+static/apple-touch-icon.png
