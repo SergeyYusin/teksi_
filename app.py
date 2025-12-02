@@ -239,8 +239,4 @@ if __name__ == '__main__':
     print(f"🌐 Адрес: http://localhost:5000")
     print("=" * 60)
 
-    app.run(
-        debug=debug_mode,
-        host=os.getenv('FLASK_HOST', '127.0.0.1'),
-        port=int(os.getenv('FLASK_PORT', 5000))
-    )
+    app.run()
