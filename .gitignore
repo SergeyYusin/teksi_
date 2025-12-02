@@ -1,7 +1,7 @@
 # .gitignore
 
 # Файлы окружения
-.env
+*.env
 .env.local
 .env.development
 .env.production
