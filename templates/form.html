@@ -1,37 +1,539 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div style="max-width: 600px; margin: 0 auto;">
-    <h1 style="text-align: center; margin-bottom: 2rem;">Форма заявки</h1>
+<div style="max-width: 800px; margin: 0 auto;">
+    <h1 style="text-align: center; margin-bottom: 25px; color: #2c3e50;">Форма заявки с расчетом</h1>
 
-    <form method="POST" action="{{ url_for('submit_application') }}" style="background: #f9f9f9; padding: 2rem; border-radius: 10px;">
-        <div style="margin-bottom: 1rem;">
-            <label for="full_name" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">ФИО:</label>
-            <input type="text" id="full_name" name="full_name" required
-                   style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+    <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); margin-bottom: 30px;">
+        <p style="text-align: center; margin-bottom: 25px; color: #666; font-size: 1.05rem;">
+            Заполните форму для расчета стоимости работ. Мы свяжемся с вами для подтверждения заявки.
+        </p>
+
+        <!-- Информация о расчете -->
+        <div style="background: #f0f8ff; padding: 15px; border-radius: 8px; margin-bottom: 25px; border-left: 4px solid #3498db;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 1.2rem;">💰</span>
+                <div>
+                    <strong style="color: #2c3e50;">Расчет стоимости</strong>
+                    <p style="margin: 5px 0 0; color: #666; font-size: 0.9rem;">
+                        Выберите виды работ и их количество для автоматического расчета
+                    </p>
+                </div>
+            </div>
         </div>
 
-        <div style="margin-bottom: 1rem;">
-            <label for="address" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Адрес:</label>
-            <input type="text" id="address" name="address" required
-                   style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
-        </div>
+        <form method="POST" action="{{ url_for('submit_application') }}" id="applicationForm" style="margin-bottom: 20px;">
+            <!-- Основная информация -->
+            <div style="margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #eee;">
+                <h3 style="color: #2c3e50; margin-bottom: 20px; font-size: 1.2rem;">👤 Контактная информация</h3>
 
-        <div style="margin-bottom: 1rem;">
-            <label for="phone" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Номер телефона:</label>
-            <input type="tel" id="phone" name="phone" required
-                   style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
-        </div>
+                <div style="margin-bottom: 20px;">
+                    <label for="full_name" style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">
+                        ФИО *
+                    </label>
+                    <input type="text" id="full_name" name="full_name" required
+                           placeholder="Иванов Иван Иванович"
+                           style="width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem;">
+                </div>
 
-        <div style="margin-bottom: 1rem;">
-            <label for="comment" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Комментарий:</label>
-            <textarea id="comment" name="comment" rows="4"
-                      style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;"></textarea>
-        </div>
+                <div style="margin-bottom: 20px;">
+                    <label for="address" style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">
+                        Адрес выполнения работ *
+                    </label>
+                    <input type="text" id="address" name="address" required
+                           placeholder="г. Москва, ул. Примерная, д. 1, кв. 1"
+                           style="width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem;">
+                </div>
 
-        <button type="submit" class="btn" style="width: 100%; font-size: 1.1rem;">
-            Отправить заявку
-        </button>
-    </form>
+                <div style="margin-bottom: 20px;">
+                    <label for="phone" style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">
+                        Номер телефона *
+                    </label>
+                    <input type="tel" id="phone" name="phone" required
+                           placeholder="+7 (999) 123-45-67"
+                           style="width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem;">
+                </div>
+            </div>
+
+            <!-- Выбор работ -->
+            <div style="margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #eee;">
+                <h3 style="color: #2c3e50; margin-bottom: 20px; font-size: 1.2rem;">🔧 Выбор работ *</h3>
+                <p style="color: #666; margin-bottom: 15px; font-size: 0.95rem;">
+                    Выберите минимум один вид работ
+                </p>
+
+                <!-- Список работ -->
+                <div id="worksList" style="margin-bottom: 20px;">
+                    <!-- Работа 1 -->
+                    <div class="work-item" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #eee;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <div>
+                                <h4 style="color: #2c3e50; margin: 0; font-size: 1.1rem;">Ремонт помещений</h4>
+                                <p style="color: #666; margin: 5px 0; font-size: 0.9rem;">Косметический/капитальный ремонт</p>
+                                <p style="color: #e74c3c; font-weight: 600; margin: 0;">3 000 ₽ за м²</p>
+                            </div>
+                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                <input type="checkbox" name="work_type" value="Ремонт помещений" data-price="3000" data-unit="м²" class="work-checkbox">
+                                <span>Выбрать</span>
+                            </label>
+                        </div>
+
+                        <div class="work-details" style="display: none;">
+                            <div style="display: grid; grid-template-columns: 1fr auto; gap: 15px; align-items: center;">
+                                <div>
+                                    <label style="display: block; margin-bottom: 5px; color: #666; font-size: 0.9rem;">Количество (м²)</label>
+                                    <input type="number" min="1" max="1000" step="1"
+                                           class="work-quantity"
+                                           style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 5px;"
+                                           placeholder="Например: 50">
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="color: #666; font-size: 0.9rem;">Стоимость:</div>
+                                    <div class="work-cost" style="font-size: 1.2rem; font-weight: 600; color: #2c3e50;">0 ₽</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Работа 2 -->
+                    <div class="work-item" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #eee;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <div>
+                                <h4 style="color: #2c3e50; margin: 0; font-size: 1.1rem;">Электромонтажные работы</h4>
+                                <p style="color: #666; margin: 5px 0; font-size: 0.9rem;">Прокладка проводки, установка розеток</p>
+                                <p style="color: #e74c3c; font-weight: 600; margin: 0;">1 500 ₽ за точку</p>
+                            </div>
+                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                <input type="checkbox" name="work_type" value="Электромонтажные работы" data-price="1500" data-unit="точка" class="work-checkbox">
+                                <span>Выбрать</span>
+                            </label>
+                        </div>
+
+                        <div class="work-details" style="display: none;">
+                            <div style="display: grid; grid-template-columns: 1fr auto; gap: 15px; align-items: center;">
+                                <div>
+                                    <label style="display: block; margin-bottom: 5px; color: #666; font-size: 0.9rem;">Количество точек</label>
+                                    <input type="number" min="1" max="100" step="1"
+                                           class="work-quantity"
+                                           style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 5px;"
+                                           placeholder="Например: 10">
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="color: #666; font-size: 0.9rem;">Стоимость:</div>
+                                    <div class="work-cost" style="font-size: 1.2rem; font-weight: 600; color: #2c3e50;">0 ₽</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Работа 3 -->
+                    <div class="work-item" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #eee;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <div>
+                                <h4 style="color: #2c3e50; margin: 0; font-size: 1.1rem;">Сантехнические работы</h4>
+                                <p style="color: #666; margin: 5px 0; font-size: 0.9rem;">Установка/замена сантехники</p>
+                                <p style="color: #e74c3c; font-weight: 600; margin: 0;">4 000 ₽ за единицу</p>
+                            </div>
+                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                <input type="checkbox" name="work_type" value="Сантехнические работы" data-price="4000" data-unit="единица" class="work-checkbox">
+                                <span>Выбрать</span>
+                            </label>
+                        </div>
+
+                        <div class="work-details" style="display: none;">
+                            <div style="display: grid; grid-template-columns: 1fr auto; gap: 15px; align-items: center;">
+                                <div>
+                                    <label style="display: block; margin-bottom: 5px; color: #666; font-size: 0.9rem;">Количество единиц</label>
+                                    <input type="number" min="1" max="50" step="1"
+                                           class="work-quantity"
+                                           style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 5px;"
+                                           placeholder="Например: 5">
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="color: #666; font-size: 0.9rem;">Стоимость:</div>
+                                    <div class="work-cost" style="font-size: 1.2rem; font-weight: 600; color: #2c3e50;">0 ₽</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Работа 4 -->
+                    <div class="work-item" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #eee;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <div>
+                                <h4 style="color: #2c3e50; margin: 0; font-size: 1.1rem;">Малярные работы</h4>
+                                <p style="color: #666; margin: 5px 0; font-size: 0.9rem;">Покраска стен, потолков</p>
+                                <p style="color: #e74c3c; font-weight: 600; margin: 0;">800 ₽ за м²</p>
+                            </div>
+                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                <input type="checkbox" name="work_type" value="Малярные работы" data-price="800" data-unit="м²" class="work-checkbox">
+                                <span>Выбрать</span>
+                            </label>
+                        </div>
+
+                        <div class="work-details" style="display: none;">
+                            <div style="display: grid; grid-template-columns: 1fr auto; gap: 15px; align-items: center;">
+                                <div>
+                                    <label style="display: block; margin-bottom: 5px; color: #666; font-size: 0.9rem;">Количество (м²)</label>
+                                    <input type="number" min="1" max="500" step="1"
+                                           class="work-quantity"
+                                           style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 5px;"
+                                           placeholder="Например: 100">
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="color: #666; font-size: 0.9rem;">Стоимость:</div>
+                                    <div class="work-cost" style="font-size: 1.2rem; font-weight: 600; color: #2c3e50;">0 ₽</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Работа 5 -->
+                    <div class="work-item" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #eee;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <div>
+                                <h4 style="color: #2c3e50; margin: 0; font-size: 1.1rem;">Установка дверей/окон</h4>
+                                <p style="color: #666; margin: 5px 0; font-size: 0.9rem;">Монтаж и установка</p>
+                                <p style="color: #e74c3c; font-weight: 600; margin: 0;">2 500 ₽ за единицу</p>
+                            </div>
+                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                <input type="checkbox" name="work_type" value="Установка дверей/окон" data-price="2500" data-unit="единица" class="work-checkbox">
+                                <span>Выбрать</span>
+                            </label>
+                        </div>
+
+                        <div class="work-details" style="display: none;">
+                            <div style="display: grid; grid-template-columns: 1fr auto; gap: 15px; align-items: center;">
+                                <div>
+                                    <label style="display: block; margin-bottom: 5px; color: #666; font-size: 0.9rem;">Количество единиц</label>
+                                    <input type="number" min="1" max="20" step="1"
+                                           class="work-quantity"
+                                           style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 5px;"
+                                           placeholder="Например: 3">
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="color: #666; font-size: 0.9rem;">Стоимость:</div>
+                                    <div class="work-cost" style="font-size: 1.2rem; font-weight: 600; color: #2c3e50;">0 ₽</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Скрытые поля для отправки данных о работах -->
+                <input type="hidden" id="selected_works_json" name="selected_works_json">
+                <input type="hidden" id="total_amount" name="total_amount">
+
+                <!-- Итоговый расчет -->
+                <div id="totalCalculation" style="display: none; background: #e8f4fc; padding: 20px; border-radius: 8px; margin-top: 20px;">
+                    <h4 style="color: #2c3e50; margin-bottom: 15px; font-size: 1.1rem;">📊 Итоговый расчет</h4>
+
+                    <div id="worksSummary" style="margin-bottom: 15px;">
+                        <!-- Сюда будет добавляться список выбранных работ -->
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 15px; border-top: 1px solid #ccc;">
+                        <div>
+                            <div style="font-size: 1.1rem; font-weight: 600; color: #2c3e50;">Общая стоимость:</div>
+                            <div style="font-size: 0.9rem; color: #666;">Без учета материалов и доп. услуг</div>
+                        </div>
+                        <div id="finalTotal" style="font-size: 1.8rem; font-weight: 700; color: #e74c3c;">0 ₽</div>
+                    </div>
+                </div>
+
+                <div id="noWorksError" style="color: #e74c3c; margin-top: 10px; display: none;">
+                    ❌ Пожалуйста, выберите хотя бы один вид работ
+                </div>
+            </div>
+
+            <!-- Комментарий -->
+            <div style="margin-bottom: 25px;">
+                <label for="comment" style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">
+                    Комментарий к заявке
+                </label>
+                <textarea id="comment" name="comment" rows="4"
+                          placeholder="Дополнительные пожелания, особенности объекта, сроки..."
+                          style="width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem; resize: vertical; min-height: 120px;"></textarea>
+            </div>
+
+            <!-- Кнопка отправки -->
+            <div style="text-align: center; margin-top: 30px;">
+                <button type="submit" class="btn btn-primary" style="font-size: 1.1rem; padding: 14px 40px;" id="submitBtn">
+                    📨 Отправить заявку с расчетом
+                </button>
+            </div>
+        </form>
+
+        <div style="font-size: 0.9rem; color: #666; text-align: center; padding-top: 20px; border-top: 1px solid #eee;">
+            <p>Поля, отмеченные * - обязательны для заполнения</p>
+            <p style="margin-top: 10px;">⚠️ Окончательная стоимость может отличаться после осмотра объекта специалистом</p>
+        </div>
+    </div>
+
+    <!-- Информация -->
+    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: center; margin-top: 30px;">
+        <h3 style="color: #2c3e50; margin-bottom: 15px;">📞 Нужна консультация?</h3>
+        <p style="margin-bottom: 10px;">Звоните для точного расчета:</p>
+        <p style="margin-bottom: 15px;">
+            <a href="tel:+79991234567" style="color: #e74c3c; text-decoration: none; font-size: 1.2rem; font-weight: 600;">
+                +7 (999) 123-45-67
+            </a>
+        </p>
+        <p style="font-size: 0.9rem; color: #666;">
+            Наш специалист бесплатно проконсультирует вас и сделает точный расчет
+        </p>
+    </div>
 </div>
+
+<!-- JavaScript для расчета -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const workCheckboxes = document.querySelectorAll('.work-checkbox');
+    const applicationForm = document.getElementById('applicationForm');
+    const totalCalculation = document.getElementById('totalCalculation');
+    const worksSummary = document.getElementById('worksSummary');
+    const finalTotal = document.getElementById('finalTotal');
+    const noWorksError = document.getElementById('noWorksError');
+    const selectedWorksInput = document.getElementById('selected_works_json');
+    const totalAmountInput = document.getElementById('total_amount');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // Данные о выбранных работах
+    let selectedWorks = [];
+    let totalAmount = 0;
+
+    // Обработчик изменения чекбокса
+    workCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const workItem = this.closest('.work-item');
+            const workDetails = workItem.querySelector('.work-details');
+            const quantityInput = workItem.querySelector('.work-quantity');
+            const costDisplay = workItem.querySelector('.work-cost');
+
+            if (this.checked) {
+                // Показываем детали
+                workDetails.style.display = 'block';
+                quantityInput.required = true;
+                quantityInput.value = 1;
+
+                // Добавляем работу в список
+                const workData = {
+                    type: this.value,
+                    price: parseFloat(this.dataset.price),
+                    unit: this.dataset.unit,
+                    quantity: 1,
+                    cost: parseFloat(this.dataset.price)
+                };
+
+                selectedWorks.push(workData);
+                calculateWork(workItem, workData);
+
+            } else {
+                // Скрываем детали
+                workDetails.style.display = 'none';
+                quantityInput.required = false;
+                quantityInput.value = '';
+                costDisplay.textContent = '0 ₽';
+
+                // Удаляем работу из списка
+                selectedWorks = selectedWorks.filter(work => work.type !== this.value);
+            }
+
+            updateTotalCalculation();
+            validateForm();
+        });
+    });
+
+    // Обработчик изменения количества
+    document.querySelectorAll('.work-quantity').forEach(input => {
+        input.addEventListener('input', function() {
+            const workItem = this.closest('.work-item');
+            const checkbox = workItem.querySelector('.work-checkbox');
+            const costDisplay = workItem.querySelector('.work-cost');
+
+            if (checkbox.checked) {
+                const quantity = parseInt(this.value) || 0;
+                if (quantity > 0) {
+                    // Обновляем данные работы
+                    const workIndex = selectedWorks.findIndex(work => work.type === checkbox.value);
+                    if (workIndex !== -1) {
+                        selectedWorks[workIndex].quantity = quantity;
+                        selectedWorks[workIndex].cost = selectedWorks[workIndex].price * quantity;
+                        calculateWork(workItem, selectedWorks[workIndex]);
+                        updateTotalCalculation();
+                    }
+                }
+            }
+        });
+    });
+
+    // Функция расчета стоимости одной работы
+    function calculateWork(workItem, workData) {
+        const costDisplay = workItem.querySelector('.work-cost');
+        const cost = workData.price * workData.quantity;
+        costDisplay.textContent = cost.toLocaleString('ru-RU') + ' ₽';
+        workData.cost = cost;
+    }
+
+    // Функция обновления итогового расчета
+    function updateTotalCalculation() {
+        // Считаем общую сумму
+        totalAmount = selectedWorks.reduce((sum, work) => sum + work.cost, 0);
+
+        if (selectedWorks.length > 0) {
+            // Показываем блок расчета
+            totalCalculation.style.display = 'block';
+
+            // Обновляем список работ
+            worksSummary.innerHTML = '';
+            selectedWorks.forEach(work => {
+                const workElement = document.createElement('div');
+                workElement.style.cssText = 'display: flex; justify-content: space-between; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px dashed #ddd;';
+                workElement.innerHTML = `
+                    <span>${work.type} (${work.quantity} ${work.unit})</span>
+                    <span style="font-weight: 600;">${work.cost.toLocaleString('ru-RU')} ₽</span>
+                `;
+                worksSummary.appendChild(workElement);
+            });
+
+            // Обновляем общую сумму
+            finalTotal.textContent = totalAmount.toLocaleString('ru-RU') + ' ₽';
+
+        } else {
+            // Скрываем блок расчета
+            totalCalculation.style.display = 'none';
+            finalTotal.textContent = '0 ₽';
+        }
+
+        // Сохраняем данные в скрытые поля
+        selectedWorksInput.value = JSON.stringify(selectedWorks);
+        totalAmountInput.value = totalAmount;
+    }
+
+    // Валидация формы
+    function validateForm() {
+        const hasSelectedWorks = selectedWorks.length > 0;
+        const allQuantitiesValid = selectedWorks.every(work => work.quantity > 0);
+
+        if (!hasSelectedWorks) {
+            noWorksError.style.display = 'block';
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.6';
+            return false;
+        } else if (!allQuantitiesValid) {
+            noWorksError.style.display = 'block';
+            noWorksError.textContent = '❌ Укажите количество для всех выбранных работ';
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.6';
+            return false;
+        } else {
+            noWorksError.style.display = 'none';
+            submitBtn.disabled = false;
+            submitBtn.style.opacity = '1';
+            return true;
+        }
+    }
+
+    // Обработчик отправки формы
+    applicationForm.addEventListener('submit', function(e) {
+        if (!validateForm()) {
+            e.preventDefault();
+            alert('Пожалуйста, выберите виды работ и укажите их количество');
+            return false;
+        }
+
+        // Показываем подтверждение
+        if (!confirm(`Подтвердите отправку заявки на сумму ${totalAmount.toLocaleString('ru-RU')} ₽`)) {
+            e.preventDefault();
+            return false;
+        }
+
+        // Добавляем данные о расчете в форму
+        const formData = new FormData(this);
+
+        // Добавляем информацию о работах как текстовое поле
+        const worksText = selectedWorks.map(work =>
+            `${work.type}: ${work.quantity} ${work.unit} × ${work.price} ₽ = ${work.cost} ₽`
+        ).join('\n');
+
+        const worksField = document.createElement('textarea');
+        worksField.name = 'works_description';
+        worksField.style.display = 'none';
+        worksField.textContent = 'Выбранные работы:\n' + worksText + '\n\nОбщая стоимость: ' + totalAmount.toLocaleString('ru-RU') + ' ₽';
+        this.appendChild(worksField);
+
+        return true;
+    });
+
+    // Валидация при загрузке
+    validateForm();
+
+    // Инициализация tooltips
+    document.querySelectorAll('.work-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('mouseenter', function() {
+            const workItem = this.closest('.work-item');
+            workItem.style.boxShadow = '0 0 0 2px #3498db';
+        });
+
+        checkbox.addEventListener('mouseleave', function() {
+            const workItem = this.closest('.work-item');
+            workItem.style.boxShadow = '';
+        });
+    });
+});
+</script>
+
+<style>
+    @media (max-width: 768px) {
+        .work-item {
+            padding: 12px !important;
+        }
+
+        .work-item > div:first-child {
+            flex-direction: column;
+            align-items: flex-start !important;
+            gap: 10px !important;
+        }
+
+        label[style*="display: flex"] {
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        .work-details > div {
+            grid-template-columns: 1fr !important;
+            gap: 10px !important;
+        }
+
+        #finalTotal {
+            font-size: 1.5rem !important;
+        }
+
+        .btn-primary {
+            width: 100%;
+            max-width: 300px;
+            padding: 12px 20px !important;
+        }
+    }
+
+    input:focus, textarea:focus {
+        outline: none;
+        border-color: #3498db !important;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    }
+
+    .work-checkbox {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+    }
+
+    .work-quantity {
+        transition: all 0.3s;
+    }
+
+    .work-quantity:focus {
+        border-color: #2c3e50 !important;
+    }
+</style>
 {% endblock %}
